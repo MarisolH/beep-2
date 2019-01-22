@@ -1,12 +1,14 @@
 import React from 'react';
 import { Button, View, Text, FlatList } from 'react-native';
 import fire from './config/Fire';
+import {connect} from 'react-redux';
+import {getBeep} from './actions/beep-actions';
 
 class DetailsScreen extends React.Component {
-	state = {
-		name: null,
-		beeps: []
-	};
+	// state = {
+	// 	name: null,
+	// 	beeps: []
+	// };
 
 	submit = () => {
 		let name = this.state.name
@@ -36,10 +38,9 @@ class DetailsScreen extends React.Component {
 	componentDidMount () {
 		const { navigation } = this.props;
 		const name = navigation.getParam('name');
-
-		this.setState({ name });
-
-		this.makeRemoteRequest(); 
+    this.props.dispatch(getBeep());
+		// this.setState({ name });
+		// this.makeRemoteRequest(); 
 	}
 
 	componentWillUnmount () {
@@ -47,12 +48,13 @@ class DetailsScreen extends React.Component {
 		leadsRef.off('child_added', this.handleFirebaseChildAdded);
 	}
 
-	render() {	 
+	render() {	
+     
 		return (
 			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 				<Text>Details Screen, Hola {this.state.name}!</Text>
 				<FlatList
-					data={this.state.beeps}
+					data={this.props.beep}
 					renderItem={({item}) => <Text>{item.name}</Text>}
 					keyExtractor={(item) => item.id}
 				/>
@@ -65,5 +67,8 @@ class DetailsScreen extends React.Component {
 	}
 }
 
+ mapStateToProps= state => ({
+  beep:state.BeepReducer.beep
+ });
 
-export default DetailsScreen;
+export default connect(mapStateToProps)(DetailsScreen);
