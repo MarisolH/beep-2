@@ -10,14 +10,6 @@ class HomeScreen extends React.Component {
     this.state = {text: ''};
   }
 
-  submit(){
-    console.log(this.state.text);
-        fire.database().ref('beep-react').push({//crea un nuevo registro en la bd
-        name: this.state.text + ' hizo un beep!'
-      });
-      // let beeps = this.st.beeps.concat([this.input]);
-      // this.setState({beeps});
-    }
   render() {
     const all= {
       name: this.state.text
@@ -35,7 +27,7 @@ class HomeScreen extends React.Component {
         </Text>
         <Button
           title="Siguiente"
-          onPress={() => this.props.navigation.navigate('Details', all, this.submit())}
+          onPress={() => this.props.navigation.navigate('Details', all)}
         />
       </View>
     );
