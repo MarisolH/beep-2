@@ -17,7 +17,7 @@ export default function BeepReducer (state = initialState, action){
         case GET_BEEP_SUCCESS :
             return {
                 ...state,
-                beep: action.payload.beep,
+                beeps: action.payload.data,
                 isLoading: false
             }
         case GET_BEEP_FAILURE:
@@ -25,5 +25,7 @@ export default function BeepReducer (state = initialState, action){
                 ...state,
                 isLoading: false
         }
+        default: 
+            return state
     }
 }

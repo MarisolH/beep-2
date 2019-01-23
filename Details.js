@@ -1,14 +1,14 @@
 import React from 'react';
 import { Button, View, Text, FlatList } from 'react-native';
 import fire from './config/Fire';
-import {connect} from 'react-redux';
+import {connect, Provider} from 'react-redux';
 import {getBeep} from './actions/beep-actions';
 
 class DetailsScreen extends React.Component {
-	// state = {
-	// 	name: null,
-	// 	beeps: []
-	// };
+	state = {
+		name: null,
+		beeps: []
+	};
 
 	submit = () => {
 		let name = this.state.name
@@ -16,6 +16,7 @@ class DetailsScreen extends React.Component {
 		fire.database().ref('beep-react').push({
 			name: name + ' hizo un beep!'
 	    });
+	    this.props.dispatch(getBeep());
 	}
 	
 	handleFirebaseChildAdded = (snapshot, id) => {
@@ -38,9 +39,10 @@ class DetailsScreen extends React.Component {
 	componentDidMount () {
 		const { navigation } = this.props;
 		const name = navigation.getParam('name');
-    this.props.dispatch(getBeep());
-		// this.setState({ name });
-		// this.makeRemoteRequest(); 
+  		this.props.dispatch(getBeep());
+		this.setState({
+			name
+		}, () => this.makeRemoteRequest()); 
 	}
 
 	componentWillUnmount () {
@@ -49,12 +51,11 @@ class DetailsScreen extends React.Component {
 	}
 
 	render() {	
-     
 		return (
 			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 				<Text>Details Screen, Hola {this.state.name}!</Text>
 				<FlatList
-					data={this.props.beep}
+					data={this.props.beep.beeps}
 					renderItem={({item}) => <Text>{item.name}</Text>}
 					keyExtractor={(item) => item.id}
 				/>
@@ -67,8 +68,8 @@ class DetailsScreen extends React.Component {
 	}
 }
 
- mapStateToProps= state => ({
-  beep:state.BeepReducer.beep
- });
+mapStateToProps= state => ({
+	beep:state.BeepReducer
+});
 
 export default connect(mapStateToProps)(DetailsScreen);

@@ -1,10 +1,10 @@
-import fire from './config/fire';
+import fire from '../config/Fire';
 
 export const GET_BEEP_BEGIN = 'GET_BEEP_BEGIN';
 export const GET_BEEP_SUCCESS = 'GET_BEEP_SUCCESS';
 export const GET_BEEP_FAILURE = 'GET_BEEP_FAILURE';
 
-export const getBeep = () => async dispatch =>{
+export const getBeep = () => async (dispatch, getState) =>{
     dispatch(getBeepBegin());
     let events = [];
     let leadsRef = fire.database().ref('beep-react');
@@ -12,7 +12,8 @@ export const getBeep = () => async dispatch =>{
         let data = snapshot.val();
 		if (!id) return;
 		data.id = id
-        let beeps = this.state.beeps.concat([data]);
+        let beeps = getState().BeepReducer.beep.beeps;
+        beeps.push(data);
         dispatch(getBeepSuccess(beeps));
     }); 
 }
